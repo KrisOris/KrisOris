@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='leaderboard.css') }}">
+</head>
+<body>
+    <main>
+        <h1>Leaderboard</h1>
+        <p class="leaderboard-sort">
+            <a href="{{ url_for('leaderboard', sort='hp') }}" class="sort-btn{% if sort_mode == 'hp' %} sort-btn-active{% endif %}">Highest HP first</a>
+            <a href="{{ url_for('leaderboard', sort='time') }}" class="sort-btn{% if sort_mode == 'time' %} sort-btn-active{% endif %}">Fastest time first</a>
+        </p>
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>HP Left</th>
+                <th>Time</th>
+            </tr>
+            {% for row in results %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ row["name"] }}</td>
+                <td>{{ row["hp"] }} / 10</td>
+                <td>{{ row["time_seconds"] }}s</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p><a href="{{ url_for('main') }}">Back to Home</a></p>
+    </main>
+</body>
+</html>

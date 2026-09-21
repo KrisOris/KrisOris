@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+<div class="py-4">
+
+    <div class="bg-white p-5 rounded shadow-sm border mb-5">
+        <h1 class="display-4 text-success fw-bold">Welcome to Colerful's</h1>
+        <p class="lead text-secondary">Nature's finest colors gathered in a one single place. </p>
+        <hr class="my-4">
+        <p>Discover the perfect gift or a little something to brighten your own space.</p>
+        <a class="btn btn-success btn-lg" href="{{ url_for('products') }}" role="button">Start Shopping</a>
+    </div>
+
+    <div class="d-flex align-items-center mb-4">
+        <h2 class="text-success fw-bold mb-0">Some of our products</h2>
+        <span class="ms-3 badge bg-light text-success border">New Arrivals</span>
+    </div>
+
+    <table class="table border bg-white shadow-sm">
+        <thead class="bg-light text-secondary">
+            <tr>
+                
+                <th class="ps-4">Product Name</th>
+                <th>Image</th>
+                <th>Price</th>
+                <th class="text-end pe-4">Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td class="ps-4 fw-semibold">{{ product["name"] }}</td>
+                <td><img src="{{ url_for('static', filename=product['image_filename']) }}" 
+                    alt="{{ product['name'] }}" 
+                    class="img-thumbnail" 
+                    style="width: 80px; height: 80px; object-fit: cover;"></td>
+                <td class="text-success">€{{ "%.2f"|format(product["price"]) }}</td>
+                <td class="text-end pe-4">
+                    <a href="{{ url_for('product', product_id=product['product_id']) }}" class="btn btn-sm btn-outline-success">
+                        See product
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="mt-5">
+        <h3 class="text-success fw-bold mb-3">What our customers say</h3>
+        {% if reviews %}
+        <div class="row row-cols-1 row-cols-md-2 g-3">
+            {% for r in reviews %}
+            <div class="col">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-semibold">Order #{{ r.order_id }}</span>
+                            <span class="badge bg-success">{{ r.rating }}/5</span>
+                        </div>
+                        {% if r.comment %}
+                        <p class="mb-2 text-muted">{{ r.comment }}</p>
+                        {% else %}
+                        <p class="mb-2 text-muted fst-italic">No comment provided.</p>
+                        {% endif %}
+                        <p class="mb-0 small text-secondary">by {{ r.user_id }} on {{ r.created_at }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted">No reviews yet. Place an order and be the first to share your experience!</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

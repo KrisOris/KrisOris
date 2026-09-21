@@ -1,0 +1,11 @@
+canvas {
+    background-color: black;
+    display: block;
+    margin: 1em auto;
+    outline: 2px solid gold;
+    outline-offset: 0.2em;
+}
+
+a{
+    margin-top: 1em;
+}

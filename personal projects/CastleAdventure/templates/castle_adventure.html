@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='castle_adventure.css') }}">
+    
+    <title>Castle Adventure</title>
+
+    
+
+</head>
+<body>
+    <h1>Castle Adventure</h1>
+    <p>
+        <a href="{{ url_for('main') }}">Go back to the main page</a>
+    </p>
+    
+    <section id="win-form" style="display:none">
+        <p>You Win!</p>
+        <p id="win-hp"></p>
+        <form action="{{ url_for('submit_score')}}" method="POST">
+            <input type="text" name="name" placeholder="Enter your name" required>
+            <input type="hidden" name="hp" id="hp-input">
+            <input type="hidden" name="time_seconds" id="time-input">
+            <button type="submit">Submit Score</button>
+        </form>
+        <a href="{{ url_for('castle_adventure') }}">Play Again</a>
+    </section>
+    
+    <section id="lose-form" style="display:none">
+        <p>You Died!</p>
+        <a href="{{ url_for('castle_adventure') }}">Play Again</a>
+    </section>
+    
+    <canvas width="1000" height="600"></canvas>
+    
+
+</body>
+</html>

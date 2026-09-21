@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<div class="py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            
+            <div class="bg-white shadow-sm rounded-3 overflow-hidden border">
+                <div class="row g-0">
+                    
+                    
+                    <div class="col-md-5">
+                        <img src="{{ url_for('static', filename=product['image_filename']) }}" 
+                             alt="{{ product['name'] }}" 
+                             class="w-100 h-100" 
+                             style="object-fit: cover; min-height: 320px;">
+                    </div>
+
+                    
+                    <div class="col-md-7 p-4 d-flex flex-column justify-content-center">
+                        <nav aria-label="breadcrumb" class="mb-2">
+                            <ol class="breadcrumb x-small text-uppercase fw-bold mb-0" style="font-size: 0.75rem;">
+                                <li class="breadcrumb-item"><a href="{{ url_for('products') }}" class="text-success text-decoration-none">Catalog</a></li>
+                                <li class="breadcrumb-item active text-muted" aria-current="page">Details</li>
+                            </ol>
+                        </nav>
+
+                        <h2 class="fw-bold text-dark mb-2">{{ product["name"] }}</h2>
+                        
+                        <div class="mb-3">
+                            <span class="h4 text-success fw-bold">€{{ "%.2f"|format(product["price"]) }}</span>
+                            {% if product["quantity"] > 0 %}
+                                <span class="text-muted ms-2 small">In stock</span>
+                            {% else %}
+                                <span class="text-danger ms-2 small fw-bold">Out of stock</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="text-uppercase fw-bold text-secondary mb-1" style="font-size: 0.8rem;">Description</h6>
+                            <p class="text-secondary small mb-0">
+                                {{ product["description"] }}
+                            </p>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col-8">
+                                {% if product["quantity"] > 0 %}
+                                    <a href="{{ url_for('add_to_cart', product_id=product['product_id']) }}" 
+                                       class="btn btn-success w-100 fw-bold shadow-sm">
+                                        Add to Cart
+                                    </a>
+                                {% else %}
+                                    <button class="btn btn-secondary w-100 fw-bold shadow-sm" disabled>
+                                        Out of Stock
+                                    </button>
+                                {% endif %}
+                            </div>
+                            <div class="col-4">
+                                {% if g.user %}
+                                    {% if is_favourite %}
+                                        <a href="{{ url_for('remove_favorite', product_id=product['product_id']) }}"
+                                           class="btn btn-outline-danger w-100 fw-bold">
+                                            Unfavorite
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ url_for('add_to_favorites', product_id=product['product_id']) }}"
+                                           class="btn btn-outline-success w-100 fw-bold">
+                                            Favorite
+                                        </a>
+                                    {% endif %}
+                                {% else %}
+                                    <a href="{{ url_for('auth', next=request.url) }}"
+                                       class="btn btn-outline-success w-100 fw-bold">
+                                        Favorite
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <div class="col-4">
+                                <a href="{{ url_for('products') }}" class="btn btn-outline-secondary w-100 fw-bold">
+                                    Back
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            
+            <div class="mt-4">
+                <h6 class="text-success fw-bold text-uppercase mb-3" style="letter-spacing: 1px;">You might also like</h6>
+                <div class="row g-3">
+                    {% for suggestion in suggestions %}
+                    <div class="col-6 col-md-3">
+                        <a href="{{ url_for('product', product_id=suggestion['product_id']) }}" class="text-decoration-none">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden bg-white">
+                                <img src="{{ url_for('static', filename=suggestion['image_filename']) }}" 
+                                     class="card-img-top" 
+                                     alt="{{ suggestion['name'] }}"
+                                     style="height: 120px; object-fit: cover;">
+                                <div class="p-2 text-center">
+                                    <p class="small fw-bold text-dark mb-0 text-truncate">{{ suggestion['name'] }}</p>
+                                    <p class="x-small text-success mb-0">€{{ "%.2f"|format(suggestion['price']) }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

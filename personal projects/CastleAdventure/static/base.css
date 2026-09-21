@@ -1,0 +1,85 @@
+body {
+    font-family: system-ui;
+    line-height: 1.5;
+    margin: 0;
+    padding: 1em;
+    color: lightsteelblue;
+    background: midnightblue;
+    text-align: center;
+}
+
+h1 {
+    font-weight: 600;
+    margin-top: 0;
+    color: gold;
+}
+
+a {
+    color: gold;
+    display: inline-block;
+    text-decoration: none;
+    padding: 0.35em 0.85em;
+    background: navy;
+    border: 1px solid goldenrod;
+    border-radius: 0.25em;
+}
+
+a:hover {
+    background: darkblue;
+    color: yellow;
+    text-decoration: none;
+}
+
+button {
+    background: gold;
+    color: midnightblue;
+    border: 1px solid goldenrod;
+    padding: 0.35em 0.75em;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    background: yellow;
+}
+
+input[type="text"] {
+    background: navy;
+    color: lightsteelblue;
+    border: 1px solid goldenrod;
+    padding: 0.35em 0.5em;
+    text-align: center;
+}
+
+input[type="text"]::placeholder {
+    color: lightsteelblue;
+    opacity: 0.7;
+}
+
+table {
+    border-collapse: collapse;
+    margin: 1em auto;
+    width: 100%;
+    max-width: 36em;
+    box-shadow: 0 0.2em 0.5em navy;
+}
+
+th, td {
+    border: 1px solid goldenrod;
+    padding: 0.4em 0.7em;
+    text-align: center;
+}
+
+th {
+    background: navy;
+    color: gold;
+    font-weight: 600;
+}
+
+td {
+    background: darkblue;
+}
+
+tr:nth-child(even) td {
+    background: navy;
+}

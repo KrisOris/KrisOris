@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<div class="py-4">
+    <h2 class="text-success mb-4 fw-bold">My Orders</h2>
+
+    {% if orders_list %}
+        {% for order in orders_list %}
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <span class="fw-bold">Order #{{ order.order_id }}</span>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="text-muted small">{{ order.order_date }}</span>
+                    {% if order.status == 'active' %}
+                        <span class="badge bg-success">Active</span>
+                    {% elif order.status == 'cancelled' %}
+                        <span class="badge bg-secondary">Cancelled</span>
+                    {% else %}
+                        <span class="badge bg-info text-dark">{{ order.status }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">
+                    <strong>Shipping to:</strong><br>
+                    {{ order.address }}<br>
+                    {{ order.city }}, {{ order.postal_code }}<br>
+                    {{ order.country }}
+                </p>
+                <p class="mb-2 small text-muted">
+                    <strong>Points used:</strong> {{ order.points_used or 0 }}
+                    {% if order.status == 'delivered' %}
+                        |<strong>Points earned:</strong> {{ order.points_earned or 0 }}
+                    {% endif %}
+                </p>
+                {% if order.admin_note %}
+                <p class="mb-3">
+                    <strong>Message from admin:</strong><br>
+                    <span class="text-muted">{{ order.admin_note }}</span>
+                </p>
+                {% endif %}
+                <table class="table table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-end">Price</th>
+                            <th class="text-end">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set ns = namespace(order_total=0) %}
+                        {% for item in order_items_map[order.order_id] %}
+                        {% set line_total = item.unit_price * item.quantity %}
+                        {% set ns.order_total = ns.order_total + line_total %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td class="text-center">{{ item.quantity }}</td>
+                            <td class="text-end">€{{ "%.2f"|format(item.unit_price) }}</td>
+                            <td class="text-end text-success fw-bold">€{{ "%.2f"|format(line_total) }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% if order.points_used %}
+                        {% set discount = order.points_used * 0.20 %}
+                        {% set final_total = ns.order_total - discount %}
+                        {% if final_total < 0 %}{% set final_total = 0 %}{% endif %}
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Total before points</td>
+                            <td class="text-end fw-bold">€{{ "%.2f"|format(ns.order_total) }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Points discount ({{ order.points_used }} pts)</td>
+                            <td class="text-end fw-bold text-danger">-€{{ "%.2f"|format(discount) }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Final total</td>
+                            <td class="text-end fw-bold text-success">€{{ "%.2f"|format(final_total) }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Final total</td>
+                            <td class="text-end fw-bold text-success">€{{ "%.2f"|format(ns.order_total) }}</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+                {% if order.status == 'active' %}
+                <form method="post" action="{{ url_for('cancel_order', order_id=order.order_id) }}" class="mt-3">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Cancel Order</button>
+                </form>
+                {% elif order.status == 'delivered' %}
+                    {% set review = reviews_map.get(order.order_id) %}
+                    {% if review %}
+                        <div class="mt-3">
+                            <strong>Your review:</strong>
+                            <p class="mb-1">Rating: {{ review.rating }}/5</p>
+                            {% if review.comment %}
+                            <p class="mb-0 text-muted">{{ review.comment }}</p>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <form method="post" action="{{ url_for('review_order', order_id=order.order_id) }}" class="mt-3">
+                            <div class="mb-2">
+                                <label class="form-label small fw-semibold">Rate this order:</label>
+                                <select name="rating" class="form-select form-select-sm" required>
+                                    <option value="">Select...</option>
+                                    {% for r in range(1,6) %}
+                                    <option value="{{ r }}">{{ r }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small fw-semibold">Short review (optional):</label>
+                                <textarea name="comment" class="form-control form-control-sm" rows="2" placeholder="Share your experience..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-outline-success">Submit Review</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="lead text-secondary">You have no orders yet.</p>
+        <a href="{{ url_for('products') }}" class="btn btn-success fw-bold">Browse Flowers</a>
+    {% endif %}
+</div>
+{% endblock %}

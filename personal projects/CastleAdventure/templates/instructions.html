@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='instructions.css') }}">
+
+    <title>How to Play - Castle Adventure</title>
+</head>
+<body>
+
+    <h1>Castle Adventure</h1>
+    <p><a href="{{ url_for('main') }}">Back to Home</a></p>
+    
+    <p>A dungeon crawler — survive the castle and open all 4 chests to escape.</p>
+
+    <hr>
+
+    <h2>Goal</h2>
+    <ol>
+        <li>Start in the first room and head south into the castle.</li>
+        <li>Defeat all enemies in each room to unlock the chest.</li>
+        <li>Walk into the chest to open it — this removes the red gates blocking the doors.</li>
+        <li>Clear all rooms and open the final chest to win.</li>
+    </ol>
+
+    <hr>
+
+    <h2>Controls</h2>
+    <table>
+        <tr>
+            <td><strong>Arrow keys</strong></td>
+            <td>Move your character</td>
+        </tr>
+        <tr>
+            <td><strong>Left click</strong></td>
+            <td>Shoot toward your cursor</td>
+        </tr>
+    </table>
+
+    <hr>
+
+    <h2>Enemies</h2>
+    <ul>
+        <li>
+            <h3>Walker</h3>
+            <p>Moves randomly, pauses, then picks a new direction.</p>
+            <p>2 HP</p>
+        </li>
+        <li>
+            <h3>Seeker</h3>
+            <p>Chases you directly across the room.</p>
+            <p>3 HP</p>
+        </li>
+        <li>
+            <h3>Shooter</h3>
+            <p>Stays still and fires bullets at you regularly.</p>
+            <p>4 HP</p>
+        </li>
+        <li>
+            <h3>Tank</h3>
+            <p>Slow, but deals heavy damage on contact.</p>
+            <p>8 HP</p>
+        </li>
+    </ul>
+
+    <hr>
+
+    <h2>Health</h2>
+    <p>You have <strong>10 HP</strong> shown in the top right corner. Each contact with an Enemy or an Enemy's bullet will hurt you. After each hit you get brief invincibility frames so you won't lose HP instantly.</p>
+
+    <hr>
+
+    <h2>Scoring</h2>
+    <p>When you win, your remaining HP and completion time are recorded. Finish fast and take as little damage as possible for the best score.</p>
+
+    <p><em>Tip: The timer only starts once you enter the first room.</em></p>
+
+</body>
+</html>

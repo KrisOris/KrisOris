@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<div class="py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+    
+            <div class="bg-white shadow-lg rounded-4 overflow-hidden border">
+                <div class="row g-0">
+                    
+                    <div class="col-md-6 p-5">
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold text-success">Welcome Back</h2>
+                            <p class="text-muted">Log in to manage your orders</p>
+                        </div>
+                        
+                        <form action="" method="post" novalidate>
+                            <input type="hidden" name="next" value="{{ next_page or '' }}">
+                            {{ login_form.hidden_tag() }}
+
+                            <div class="mb-3">
+                                {{ login_form.user_id.label(class="form-label small text-uppercase fw-bold text-secondary") }}
+                                {{ login_form.user_id(class="form-control border-0 bg-light", placeholder="Username") }}
+                                {% for error in login_form.user_id.errors %}
+                                    <div class="text-danger small mt-1">
+                                        <i class="bi bi-exclamation-circle me-1"></i>{{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ login_form.password.label(class="form-label small text-uppercase fw-bold text-secondary") }}
+                                {{ login_form.password(class="form-control border-0 bg-light", placeholder="Password") }}
+                                {% for error in login_form.password.errors %}
+                                    <div class="text-danger small mt-1">
+                                        <i class="bi bi-exclamation-circle me-1"></i>{{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="d-grid mb-3">
+                                {{ login_form.submit(class="btn btn-success btn-lg fw-bold shadow-sm", value="Log In") }}
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-md-6 p-5 bg-light border-start">
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold text-dark">Join Colerful's</h2>
+                            <p class="text-muted">Create an account to start shopping</p>
+                        </div>
+
+                        <form action="" method="post" novalidate>
+                            <input type="hidden" name="next" value="{{ next_page or '' }}">
+                            {{ register_form.hidden_tag() }}
+
+                            <div class="mb-3">
+                                {{ register_form.user_id.label(class="form-label small text-uppercase fw-bold text-secondary") }}
+                                {{ register_form.user_id(class="form-control border-white", placeholder="Username") }}
+                                {% for error in register_form.user_id.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ register_form.password.label(class="form-label small text-uppercase fw-bold text-secondary") }}
+                                {{ register_form.password(class="form-control border-white", placeholder="Password") }}
+                                {% for error in register_form.password.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ register_form.password2.label(class="form-label small text-uppercase fw-bold text-secondary") }}
+                                {{ register_form.password2(class="form-control border-white", placeholder="Repeat Password") }}
+                                {% for error in register_form.password2.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="d-grid">
+                                {{ register_form.submit(class="btn btn-outline-success btn-lg fw-bold", value="Register Now") }}
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <p class="text-secondary small">By accessing your account, you agree to our <a href="#" class="text-success text-decoration-none">Terms of Service</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

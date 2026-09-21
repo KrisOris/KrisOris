@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<div class="py-4">
+    <h2 class="text-success mb-4 fw-bold">Manage Orders and Users</h2>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary mb-4">Back to Dashboard</a>
+
+    <form method="get" action="{{ url_for('admin_manage_users') }}" class="mb-4">
+        <div class="input-group" style="max-width: 400px;">
+            <input type="text" name="q" class="form-control" placeholder="Search users..." value="{{ search_query or '' }}">
+            <button type="submit" class="btn btn-success">Search</button>
+            {% if search_query %}
+            <a href="{{ url_for('admin_manage_users') }}" class="btn btn-outline-secondary">Clear</a>
+            {% endif %}
+        </div>
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-warning mb-4" role="alert">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    {% if search_query and not users_data %}
+    <p class="text-muted">No users found for "{{ search_query }}".</p>
+    {% endif %}
+
+    {% for item in users_data %}
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <span class="fw-bold">
+                {{ item.user.user_id }}
+                <span class="text-muted small ms-2">(Points: {{ item.user.points_balance }})</span>
+            </span>
+            <div class="d-flex align-items-center gap-2">
+                {% if item.user.admin_status %}
+                <span class="badge bg-success">Admin</span>
+                {% else %}
+                <span class="badge bg-secondary">User</span>
+                {% endif %}
+                <form method="post" action="{{ url_for('admin_toggle_admin') }}" class="d-inline">
+                    <input type="hidden" name="user_id" value="{{ item.user.user_id }}">
+                    {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}">{% endif %}
+                    {% if item.user.admin_status %}
+                    <button type="submit" class="btn btn-sm btn-outline-warning">Remove Admin</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-sm btn-outline-success">Make Admin</button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+        <div class="card-body">
+            <h6 class="fw-bold mb-2">Orders ({{ item.orders|length }})</h6>
+            {% if item.orders %}
+                {% for order in item.orders %}
+                <div class="border rounded p-3 mb-2 bg-white">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div>
+                            <span class="fw-semibold">Order #{{ order.order_id }}</span>
+                            {% if order.status == 'active' %}
+                                <span class="badge bg-success ms-2">Active</span>
+                            {% elif order.status == 'cancelled' %}
+                                <span class="badge bg-secondary ms-2">Cancelled</span>
+                            {% elif order.status == 'delivered' %}
+                                <span class="badge bg-primary ms-2">Delivered</span>
+                            {% else %}
+                                <span class="badge bg-info text-dark ms-2">{{ order.status }}</span>
+                            {% endif %}
+                        </div>
+                        <span class="text-muted small">{{ order.order_date }}</span>
+                    </div>
+                    <p class="small text-muted mb-2">
+                        {{ order.address }}, {{ order.city }}, {{ order.postal_code }}, {{ order.country }}
+                    </p>
+                    <form method="post" action="{{ url_for('admin_update_order_note') }}" class="mb-2">
+                        <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                        {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}">{% endif %}
+                        <label class="form-label small fw-semibold">Admin message to user:</label>
+                        <div class="input-group input-group-sm mb-2">
+                            <textarea name="admin_note" class="form-control" rows="1" placeholder="Add a note...">{{ order.admin_note or '' }}</textarea>
+                            <button type="submit" class="btn btn-outline-primary">Save</button>
+                        </div>
+                    </form>
+                    
+                    {% if order.status not in ['delivered', 'cancelled'] %}
+                    <form method="post" action="{{ url_for('admin_mark_order_delivered', order_id=order.order_id) }}" class="mb-2">
+                        <button type="submit" class="btn btn-sm btn-outline-success">Mark as Delivered</button>
+                    </form>
+                    
+                    <form method="post" action="{{ url_for('cancel_order', order_id=order.order_id) }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Cancel Order</button>
+                    </form>
+                    {% endif %}
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-end">Price</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set ns = namespace(order_total=0) %}
+                            {% for order_item in item.order_items_map[order.order_id] %}
+                            {% set line_total = order_item.unit_price * order_item.quantity %}
+                            {% set ns.order_total = ns.order_total + line_total %}
+                            <tr>
+                                <td>{{ order_item.name }}</td>
+                                <td class="text-center">{{ order_item.quantity }}</td>
+                                <td class="text-end">€{{ "%.2f"|format(order_item.unit_price) }}</td>
+                                <td class="text-end text-success fw-bold">€{{ "%.2f"|format(line_total) }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% if order.points_used %}
+                            {% set discount = order.points_used * 0.20 %}
+                            {% set final_total = ns.order_total - discount %}
+                            {% if final_total < 0 %}{% set final_total = 0 %}{% endif %}
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Total before points</td>
+                                <td class="text-end fw-bold">€{{ "%.2f"|format(ns.order_total) }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Points discount ({{ order.points_used }} pts)</td>
+                                <td class="text-end fw-bold text-danger">-€{{ "%.2f"|format(discount) }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Final total</td>
+                                <td class="text-end fw-bold text-success">€{{ "%.2f"|format(final_total) }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Final total</td>
+                                <td class="text-end fw-bold text-success">€{{ "%.2f"|format(ns.order_total) }}</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endfor %}
+            {% else %}
+            <p class="text-muted mb-0">No orders yet.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

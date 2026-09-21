@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<div class="py-4 d-flex flex-column align-items-center">
+    <h2 class="text-success mb-4 fw-bold">{{ g.user }}</h2>
+    <div class="card border-0 shadow-sm w-100" style="max-width: 400px;">
+        <div class="card-body p-0">
+            <ul class="list-group list-group-flush">
+                {% if g.is_admin %}
+                <li class="list-group-item border-0">
+                    <a href="{{ url_for('admin_dashboard') }}" class="text-success text-decoration-none fw-semibold">Admin Dashboard</a>
+                </li>
+                <li class="list-group-item border-0">
+                    <a href="{{ url_for('admin_manage_products') }}" class="text-success text-decoration-none fw-semibold">Manage Products</a>
+                </li>
+                <li class="list-group-item border-0">
+                    <a href="{{ url_for('admin_manage_users') }}" class="text-success text-decoration-none fw-semibold">Manage Orders &amp; Users</a>
+                </li>
+                <li class="list-group-item border-0">
+                    <hr class="my-2">
+                </li>
+                {% else %}
+                <li class="list-group-item border-0">
+                    <a href="{{ url_for('orders') }}" class="text-success text-decoration-none fw-semibold">My Orders</a>
+                </li>
+                <li class="list-group-item border-0">
+                    <a href="{{ url_for('account') }}" class="text-success text-decoration-none fw-semibold">Account Settings</a>
+                </li>
+                <li class="list-group-item border-0">
+                    <hr class="my-2">
+                </li>
+                {% endif %}
+                <li class="list-group-item border-0">
+                    <a href="{{ url_for('cart') }}" class="text-success text-decoration-none fw-semibold">Cart</a>
+                </li>
+                <li class="list-group-item border-0">
+                    <a href="{{ url_for('favorites') }}" class="text-success text-decoration-none fw-semibold">Favorites</a>
+                </li>
+                <li class="list-group-item border-0">
+                    <hr class="my-2">
+                </li>
+                <li class="list-group-item border-0">
+                    <a href="{{ url_for('logout') }}" class="text-danger text-decoration-none fw-semibold">Log out</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

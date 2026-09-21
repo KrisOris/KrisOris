@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    
+    <title>Castle Adventure</title>
+
+</head>
+<body>
+    <main>
+        <h1>Welcome to Castle Adventure</h1>
+        <p><a href="{{ url_for('castle_adventure') }}">Play the game</a></p>
+        <p><a href="{{ url_for('leaderboard') }}">See the Leader Board</a></p>
+        <p><a href="{{ url_for('instructions') }}">See the Instructions for the game</a></p>
+    </main>
+</body>
+</html>

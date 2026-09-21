@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<div class="py-4 d-flex flex-column align-items-center">
+    <h2 class="text-success mb-4 fw-bold">Account Settings</h2>
+    <div class="card border-0 shadow-sm w-100" style="max-width: 500px;">
+        <div class="card-body">
+            <h5 class="card-title fw-bold mb-3">Account Info</h5>
+            <p class="text-muted small mb-4">Current username: <strong>{{ g.user }}</strong></p>
+            <p class="text-muted small mb-4">
+                <strong>Your points balance:</strong> {{ points_balance }} pts
+                (worth approximately €{{ "%.2f"|format(points_balance * 0.20) }})
+            </p>
+
+            <form method="post" action="{{ url_for('account') }}">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.current_password.label(class="form-label") }}
+                    {{ form.current_password(class="form-control", placeholder="Required to make changes") }}
+                    {% if form.current_password.errors %}
+                        <div class="text-danger small">{{ form.current_password.errors[0] }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.new_username.label(class="form-label") }}
+                    {{ form.new_username(class="form-control", placeholder="Leave blank to keep current") }}
+                    {% if form.new_username.errors %}
+                        <div class="text-danger small">{{ form.new_username.errors[0] }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.new_password.label(class="form-label") }}
+                    {{ form.new_password(class="form-control", placeholder="Leave blank to keep current") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.confirm_password.label(class="form-label") }}
+                    {{ form.confirm_password(class="form-control", placeholder="Required if changing password") }}
+                    {% if form.confirm_password.errors %}
+                        <div class="text-danger small">{{ form.confirm_password.errors[0] }}</div>
+                    {% endif %}
+                </div>
+                <a href="/user_menu" class="btn btn-outline-secondary">Back</a>
+                {{ form.submit(class="btn btn-success fw-bold") }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

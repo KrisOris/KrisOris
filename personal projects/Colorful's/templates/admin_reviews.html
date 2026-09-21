@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<div class="py-4">
+    <h2 class="text-success mb-4 fw-bold">All Reviews</h2>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary mb-4">Back to Dashboard</a>
+
+    {% if reviews %}
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>User</th>
+                        <th>Rating</th>
+                        <th>Comment</th>
+                        <th>Date</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in reviews %}
+                    <tr>
+                        <td>#{{ r.order_id }}</td>
+                        <td>{{ r.user_id }}</td>
+                        <td>{{ r.rating }}/5</td>
+                        <td>{{ r.comment }}</td>
+                        <td>{{ r.created_at }}</td>
+                        <td class="text-end">
+                            <form method="post" action="{{ url_for('admin_delete_review', review_id=r.review_id) }}" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <p class="text-muted">No reviews yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
+

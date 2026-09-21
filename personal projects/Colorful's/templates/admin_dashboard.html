@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<div class="py-4">
+    <h2 class="text-success mb-4 fw-bold">Admin Dashboard</h2>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+        <div class="col">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-muted small text-uppercase">Products</h5>
+                    <p class="card-text display-5 fw-bold text-success">{{ products_count }}</p>
+                    <a href="{{ url_for('admin_manage_products') }}" class="btn btn-outline-success btn-sm">Manage Products</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-muted small text-uppercase">Users</h5>
+                    <p class="card-text display-5 fw-bold text-success">{{ users_count }}</p>
+                    <a href="{{ url_for('admin_manage_users') }}" class="btn btn-outline-success btn-sm">Manage Users</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-muted small text-uppercase">Orders</h5>
+                    <p class="card-text display-5 fw-bold text-success">{{ orders_count }}</p>
+                    <a href="{{ url_for('admin_manage_users') }}" class="btn btn-outline-success btn-sm">Manage Orders</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <h3 class="text-success fw-bold mb-3">All of the reviews for the orders</h3>
+        {% if reviews %}
+        <div class="row row-cols-1 row-cols-md-2 g-3">
+            {% for r in reviews %}
+            <div class="col">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-semibold">Order #{{ r.order_id }}</span>
+                            <span class="badge bg-success">{{ r.rating }}/5</span>
+                        </div>
+                        {% if r.comment %}
+                        <p class="mb-2 text-muted">{{ r.comment }}</p>
+                        {% else %}
+                        <p class="mb-2 text-muted fst-italic">No comment provided.</p>
+                        {% endif %}
+                        <p class="mb-0 small text-secondary">by {{ r.user_id }} on {{ r.created_at }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted">No reviews yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+    
+</div>
+{% endblock %}
