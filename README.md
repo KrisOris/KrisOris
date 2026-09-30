@@ -1,5 +1,5 @@
 ## Hi there 👋, I'm Kris
-
+Second-year CS student at UCC. Tinkering with code, solving problems, and learning how systems work from the ground up.
 <!--
 **KrisOris/KrisOris** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
